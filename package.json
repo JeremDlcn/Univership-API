@@ -1,0 +1,21 @@
+{
+  "name": "univerhip-api",
+  "version": "1.0.0",
+  "description": "api for univership video games",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "api",
+    "univership"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "sqlite3": "^4.2.0"
+  }
+}
