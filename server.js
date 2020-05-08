@@ -31,20 +31,17 @@ const queryView = {
 function view(query) {
 	db.query(query, (err, res)=>{
 		if (err) {
-			// console.log(err);
-			return err
+			console.log(err);
 		}
 		else {
-			// console.log(res.rows)
-			return res.rows
+			console.log(res.rows)
 		}
 		db.end();
 	});
 }
 
 app.get('/', (req, res) =>{
-	let result = view(queryView);
-	console.log(result);
+	view(queryView);
 	res.send('ok');
 })
 
