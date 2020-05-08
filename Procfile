@@ -1,2 +1,2 @@
 web: node server.js
-init: node init.js
+init: cat db.sql | heroku pg:psql
