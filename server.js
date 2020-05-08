@@ -23,97 +23,111 @@ const db = new Client({
 
 db.connect();
 
+// Préparation des queries
 const queryView = {
 	text: "SELECT * FROM article"
 }
+
+
+
+
+
+// fonction permettant de lancer une requête sans retour
+function run(query) {
+	db.query(query, (err, res)=>{
+		if (err) {
+			console.log(err);
+		}
+	});
+}
+
+
+
 
 // fonction permettant de regarder la requete
 function view(query) {
 	db.query(query, (err, res)=>{
 		if (err) {
 			console.log(err);
+			result = err
 		}
 		else {
 			console.log(res.rows)
+			result = res.rows
 		}
-		db.end();
 	});
+	return result
 }
 
+
+
+
+
+
 app.get('/', (req, res) =>{
-	view(queryView);
-	res.send('ok');
+	const result = view(queryView);
+	res.json(result);
 })
 
 
-// // Requête en postgresql
-// client.query('SELECT $1::text as message', ['Hello World'], (err, res)=> {
-// 	console.log(err ? err.stack : res.rows[0].message)
-// 	client.end();
-// })
+
+// Récupérer la liste complète des articles
+app.get('/list', (req, res) =>{
+	const result = view(queryView);
+	res.json(result);
+})
 
 
+//Récupérer un article spécifique
+app.get('/article/:id', (req, res) =>{
+	let index = Number(req.params.id);
+	let querySolo = {
+		text: "SELECT * FROM article WHERE id=$1",
+		values: [index]
+	};
+	const result = run(querySolo);
+	res.json(result);
 
-// let db = new sq.Database("./database.db", err => {
-//   if (err) {
-//     return console.error(err.message);
-//   }
-//   console.log("Connected to the SQlite database.");
-// });
-
-
-// // Récupérer la liste complète des articles
-// app.get('/list', (req, res) =>{
-// 	let tab = []
-// 	db.all("SELECT * FROM article", (err,row)=>{
-// 		//console.log(row)
-// 		res.json(row)
-// 	});
-// })
+})
 
 
-// //Récupérer un article spécifique
-// app.get('/article/:id', (req, res) =>{
-// 	let index = Number(req.params.id);
-// 	db.each("SELECT * FROM article WHERE id = ?", [index], (err,row)=>{
-// 		if (err) {
-// 			console.log(err);
-// 		} else {
-// 			res.json(row);
-// 		}
-// 	});
-// })
+//création d'un article
+app.post('/create', (req, res)=> {
+	const corps = req.body;
+	let queryInsert = {
+		text: "INSERT INTO article (title, category, content, date, img, visibility) VALUES($1,$2,$3,$4,$5,$6)",
+		values: [corps.title, corps.category, corps.content, date, corps.img, corps.visibility]
+	}
+	const result = run(queryInsert);
+	res.send(result);
+});
 
 
-// //création d'un article
-// app.post('/create', (req, res)=> {
-// 	const corps = req.body;
-// 	//const date = '25/06/2019'
-// 	// Ajouté l'article dans la table "article"
-// 	db.run("INSERT INTO article (title, category, content, date, img, visibility) VALUES(?,?,?,?,?,?)", [corps.title, corps.category, corps.content, date, corps.img, corps.visibility]);
-// 	res.send('ok');
-// });
+//Modification d'un article
+app.post('/edit/:id', (req, res)=> {
+	const index = Number(req.params.id)+1;
+	const corps = req.body;
+	let queryUpdate = {
+		text: "UPDATE article SET title = $1, category = $2, content = $3, date = $4, img = $5, visibility = $6 WHERE id = $7",
+		values: [corps.title, corps.category, corps.content, corps.date, corps.img, corps.visibility, index]
+	}
+	// Mettre à jour la ligne lié à l'article sélectionné avec son id
+	const result = run(queryUpdate);
+	res.send(result);
+});
 
 
-// //Modification d'un article
-// app.post('/edit/:id', (req, res)=> {
-// 	const index = Number(req.params.id)+1;
-// 	const corps = req.body;
+//Suppression d'un article
+app.delete('/delete/:id', (req, res)=> {
+	const index = Number(req.params.id)+1;
 
-// 	// Mettre à jour la ligne lié à l'article sélectionné avec son id
-// 	db.run("UPDATE article SET title = ?, category = ?, content = ?, date = ?, img = ?, visibility = ? WHERE id = ?", [corps.title, corps.category, corps.content, corps.date, corps.img, corps.visibility, index]);
-// 	res.send('ok');
-// });
-
-
-// //Suppression d'un article
-// app.delete('/delete/:id', (req, res)=> {
-// 	const index = Number(req.params.id)+1;
-
-// 	// Mettre à jour la ligne lié à l'article sélectionné avec son id
-// 	db.run("DELETE FROM article WHERE id = ?", [index]);
-// 	res.send('ok');
-// });
+	let queryDelete = {
+		text: "DELETE FROM article WHERE id = ?",
+		values: [index]
+	}
+	const result = run(queryDelete);
+	res.send(result);
+});
 
 
 app.listen(process.env.PORT, ()=> console.log('Server started! 🎉'));
