@@ -44,7 +44,7 @@ function view(query) {
 
 app.get('/', (req, res) =>{
 	let result = view(queryView);
-	res.send(result);
+	res.send('ok');
 })
 
 
