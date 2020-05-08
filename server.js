@@ -12,7 +12,7 @@ app.use(express.json());	//on va récupérer les requête en json
 // Connexion à la base de données HEROKU
 const db = new Client({
 	connectionString: process.env.DATABASE_URL,
-	ssl: true,
+	ssl: false,
 });
 
 // Connexion à la base de données local
