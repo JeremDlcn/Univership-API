@@ -7,6 +7,9 @@
     "test": "node server.js",
     "start": "node server.js"
   },
+  "engines": {
+    "node": "10.x"
+  },
   "keywords": [
     "api",
     "univership"
