@@ -11,7 +11,8 @@ app.use(express.json());	//on va récupérer les requête en json
 
 // Connexion à la base de données HEROKU
 const db = new Client({
-	connectionString: process.env.DATABASE_URL
+	connectionString: process.env.DATABASE_URL,
+	ssl: true,
 });
 
 // Connexion à la base de données local
@@ -20,7 +21,7 @@ const db = new Client({
 // });
 
 
-db.connect()
+db.connect();
 
 const queryView = {
 	text: "SELECT * FROM article"
@@ -37,6 +38,7 @@ function view(query) {
 			// console.log(res.rows)
 			return res.rows
 		}
+		db.end();
 	});
 }
 
