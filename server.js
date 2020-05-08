@@ -46,6 +46,7 @@ function run(query) {
 
 // fonction permettant de regarder la requete
 function view(query) {
+	let result = '';
 	db.query(query, (err, res)=>{
 		if (err) {
 			console.log(err);
