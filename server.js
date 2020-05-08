@@ -25,19 +25,25 @@ db.connect()
 const queryView = {
 	text: "SELECT * FROM article"
 }
-view(queryView);
+
 // fonction permettant de regarder la requete
 function view(query) {
 	db.query(query, (err, res)=>{
 		if (err) {
-			console.log(err);
+			// console.log(err);
+			return err
 		}
 		else {
-			console.log(res.rows)
+			// console.log(res.rows)
+			return res.rows
 		}
 	});
 }
 
+app.get('/', (req, res) =>{
+	let result = view(queryView);
+	res.send(result);
+})
 
 
 // // Requête en postgresql
