@@ -21,7 +21,7 @@ const db = new Client({
 // });
 
 
-// db.connect();
+db.connect();
 
 const queryView = {
 	text: "SELECT * FROM article"
