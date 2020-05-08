@@ -56,8 +56,10 @@ function view(query) {
 			console.log(res.rows)
 			result = res.rows
 		}
-	});
-	return result
+	})
+	.then(()=>{
+		return result
+	})
 }
 
 
