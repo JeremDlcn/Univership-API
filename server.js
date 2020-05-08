@@ -43,7 +43,7 @@ function view(query) {
 }
 
 app.get('/', (req, res) =>{
-	let result = view(queryView);
+	// let result = view(queryView);
 	res.send('ok');
 })
 
