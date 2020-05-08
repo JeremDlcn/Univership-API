@@ -9,11 +9,36 @@ app.use(cors());
 app.use(express.json());	//on va récupérer les requête en json
 
 
-// Connexion à la base de données
-const client = new Client({
-	connectionString: 'postgresql://sunlight_admin-univership:uni$$123@postgresql-sunlight.alwaysdata.net/sunlight_univership'
+// Connexion à la base de données HEROKU
+const db = new Client({
+	connectionString: process.env.DATABASE_URL,
+	ssl: true
 });
-client.connect()
+
+// Connexion à la base de données local
+// const db = new Client({
+// 	connectionString: 'postgresql://sunlight_admin-univership:uni$$123@postgresql-sunlight.alwaysdata.net/sunlight_univership'
+// });
+
+
+db.connect()
+
+const queryView = {
+	text: "SELECT * FROM article"
+}
+view(queryView);
+// fonction permettant de regarder la requete
+function view(query) {
+	db.query(query, (err, res)=>{
+		if (err) {
+			console.log(err);
+		}
+		else {
+			console.log(res.rows)
+		}
+	});
+}
+
 
 
 // // Requête en postgresql

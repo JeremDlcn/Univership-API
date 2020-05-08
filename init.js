@@ -3,8 +3,11 @@ const { Client } = require('pg');
 
 // Connexion à la base de données
 const db = new Client({
-	connectionString: 'postgresql://sunlight_admin-univership:uni$$123@postgresql-sunlight.alwaysdata.net/sunlight_univership'
+	connectionString: process.env.DATABASE_URL,
+	ssl: true
 });
+// 'postgresql://sunlight_admin-univership:uni$$123@postgresql-sunlight.alwaysdata.net/sunlight_univership',
+
 db.connect()
 
 //Queries
