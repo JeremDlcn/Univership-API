@@ -35,13 +35,14 @@ async function run(query) {
 
 
 
-const queryView = {
-	text: "SELECT * FROM article"
-}
+
 
 // Routes
 
 app.get('/', async (req, res) =>{
+	const queryView = {
+		text: "SELECT * FROM article WHERE visibility = 'public'"
+	}
 	const result = await run(queryView);
 	res.json(result.rows);
 })
@@ -50,6 +51,9 @@ app.get('/', async (req, res) =>{
 
 // Récupérer la liste complète des articles
 app.get('/list', async (req, res) =>{
+	const queryView = {
+		text: "SELECT * FROM article"
+	}
 	const result = await run(queryView);
 	res.json(result.rows);
 })
