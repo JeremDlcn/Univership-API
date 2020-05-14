@@ -1,6 +1,7 @@
 const sq = require('sqlite3').verbose();	//module pour utiliser sqlite
 const express = require('express');			//module pour faire une API
 const cors = require('cors');	
+const moment = require('moment');
 const { Client } = require('pg');			//module pour aider dans la gestion des requêtes
 const app = express();
 
@@ -8,6 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());	//on va récupérer les requête en json
 
+moment.locale('fr');	//date française
 
 // Connexion à la base de données HEROKU
 const db = new Client({
@@ -75,9 +77,13 @@ app.get('/article/:id', async (req, res) =>{
 //création d'un article
 app.post('/create', async (req, res)=> {
 	const corps = req.body;
+
+	//Ajout de la date actuel avec le commentaire
+	let date = moment().format('DD MMMM YYYY');
+
 	let queryInsert = {
 		text: "INSERT INTO article (title, category, content, date, img, visibility) VALUES($1,$2,$3,$4,$5,$6)",
-		values: [corps.title, corps.category, corps.content, corps.date, corps.img, corps.visibility]
+		values: [corps.title, corps.category, corps.content, date, corps.img, corps.visibility]
 	}
 	run(queryInsert);
 	res.send('contenu crée');
