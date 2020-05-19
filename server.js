@@ -118,6 +118,27 @@ app.delete('/delete/:id', (req, res)=> {
 });
 
 
+
+
+// Partie FAQ
+
+//création d'une questions FAQ
+app.post('/faq/create', async (req, res)=> {
+	const corps = req.body;
+
+	let queryInsert = {
+		text: "INSERT INTO questions (question, answer) VALUES($1,$2)",
+		values: [corps.question, corps.body]
+	}
+	run(queryInsert);
+	res.send('contenu crée');
+});
+
+
+
+
+
+
 app.listen(process.env.PORT, ()=> console.log('Server started! 🎉'));
 
 

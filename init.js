@@ -18,8 +18,11 @@ db.connect()
 
 
 //Queries
-const queryCreate = {
+const createArticle = {
 	text: "CREATE TABLE article(id SERIAL PRIMARY KEY, title TEXT, category TEXT, content TEXT, date TEXT, img TEXT, visibility TEXT)"
+}
+const createFAQ = {
+	text: "CREATE TABLE questions (id SERIAL PRIMARY KEY, question TEXT, answer TEXT)"
 }
 
 let queryInsert = {
@@ -47,7 +50,8 @@ const ins = [
 
 // running function
 
-run(queryCreate);
+run(createArticle);
+run(createFAQ);
 for (let i = 0; i < ins.length; i++){
 	queryInsert.values = ins[i];
 	run(queryInsert);
