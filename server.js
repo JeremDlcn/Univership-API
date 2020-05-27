@@ -135,7 +135,17 @@ app.post('/faq/create', async (req, res)=> {
 });
 
 
+//Récupérer un question spécifique
+app.get('/faq/:id', async (req, res) =>{
+	let index = Number(req.params.id);
+	let querySolo = {
+		text: "SELECT * FROM questions WHERE id=$1",
+		values: [index]
+	};
+	const result = await run(querySolo);
+	res.json(result.rows[0]);
 
+})
 
 
 
