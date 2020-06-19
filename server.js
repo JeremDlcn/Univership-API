@@ -88,8 +88,7 @@ app.get('/public/encours', async (req, res) =>{
 	}
 	const result = await run(queryView);
 	const resultat = result.rows.find(element => element.category === 'encours');
-	console.log(resultat);
-	if (resultat == ''){
+	if (resultat == undefined){
 		resultat = '[]'
 	}
 	res.json(resultat);
