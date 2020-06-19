@@ -57,7 +57,10 @@ app.get('/public/news', async (req, res) =>{
 		text: "SELECT * FROM article WHERE visibility = 'public'"
 	}
 	const result = await run(queryView);
-	const resultat = result.rows.find(element => element.category === 'news');
+	let resultat = result.rows.find(element => element.category === 'news');
+	if (resultat == undefined){
+		resultat = [];
+	}
 	res.json(resultat);
 })
 
@@ -67,7 +70,10 @@ app.get('/public/maj', async (req, res) =>{
 		text: "SELECT * FROM article WHERE visibility = 'public'"
 	}
 	const result = await run(queryView);
-	const resultat = result.rows.find(element => element.category === 'maj');
+	let resultat = result.rows.find(element => element.category === 'maj');
+	if (resultat == undefined){
+		resultat = [];
+	}
 	res.json(resultat);
 })
 
@@ -77,7 +83,10 @@ app.get('/public/maintenance', async (req, res) =>{
 		text: "SELECT * FROM article WHERE visibility = 'public'"
 	}
 	const result = await run(queryView);
-	const resultat = result.rows.find(element => element.category === 'maintenance');
+	let resultat = result.rows.find(element => element.category === 'maintenance');
+	if (resultat == undefined){
+		resultat = [];
+	}
 	res.json(resultat);
 })
 
@@ -89,7 +98,7 @@ app.get('/public/encours', async (req, res) =>{
 	const result = await run(queryView);
 	let resultat = result.rows.find(element => element.category === 'encours');
 	if (resultat == undefined){
-		resultat = '[]'
+		resultat = [];
 	}
 	res.json(resultat);
 })
