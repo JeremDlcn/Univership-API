@@ -41,13 +41,29 @@ async function run(query) {
 
 // Routes
 
-app.get('/', async (req, res) =>{
+
+// Renvoi la liste des articles avec la visibilités public
+app.get('/public/all', async (req, res) =>{
 	const queryView = {
 		text: "SELECT * FROM article WHERE visibility = 'public'"
 	}
 	const result = await run(queryView);
 	res.json(result.rows);
 })
+
+// article public avec category news
+app.get('/public/news', async (req, res) =>{
+	const queryView = {
+		text: "SELECT * FROM article WHERE visibility = 'public'"
+	}
+	const result = await run(queryView);
+	const res = result.rows.find(element => element.category === 'maintenance');
+	res.json(result.rows);
+})
+
+
+
+
 
 
 
@@ -149,7 +165,7 @@ app.get('/faq/:id', async (req, res) =>{
 
 
 
-app.listen(process.env.PORT, ()=> console.log('Server started! 🎉'));
+app.listen(process.env.PORT || 3000, ()=> console.log('Server started! 🎉'));
 
 
 
