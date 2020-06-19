@@ -57,11 +57,39 @@ app.get('/public/news', async (req, res) =>{
 		text: "SELECT * FROM article WHERE visibility = 'public'"
 	}
 	const result = await run(queryView);
+	const resultat = result.rows.find(element => element.category === 'news');
+	res.json(resultat);
+})
+
+// article public avec category mise à jour
+app.get('/public/maj', async (req, res) =>{
+	const queryView = {
+		text: "SELECT * FROM article WHERE visibility = 'public'"
+	}
+	const result = await run(queryView);
+	const resultat = result.rows.find(element => element.category === 'maj');
+	res.json(resultat);
+})
+
+// article public avec category maintenance
+app.get('/public/maintenance', async (req, res) =>{
+	const queryView = {
+		text: "SELECT * FROM article WHERE visibility = 'public'"
+	}
+	const result = await run(queryView);
 	const resultat = result.rows.find(element => element.category === 'maintenance');
 	res.json(resultat);
 })
 
-
+// article public avec category developpement
+app.get('/public/encours', async (req, res) =>{
+	const queryView = {
+		text: "SELECT * FROM article WHERE visibility = 'public'"
+	}
+	const result = await run(queryView);
+	const resultat = result.rows.find(element => element.category === 'encours');
+	res.json(resultat);
+})
 
 
 
