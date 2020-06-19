@@ -87,7 +87,7 @@ app.get('/public/encours', async (req, res) =>{
 		text: "SELECT * FROM article WHERE visibility = 'public'"
 	}
 	const result = await run(queryView);
-	const resultat = result.rows.find(element => element.category === 'encours');
+	let resultat = result.rows.find(element => element.category === 'encours');
 	if (resultat == undefined){
 		resultat = '[]'
 	}
