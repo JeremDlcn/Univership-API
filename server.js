@@ -57,8 +57,8 @@ app.get('/public/news', async (req, res) =>{
 		text: "SELECT * FROM article WHERE visibility = 'public'"
 	}
 	const result = await run(queryView);
-	const res = result.rows.find(element => element.category === 'maintenance');
-	res.json(result.rows);
+	const resultat = result.rows.find(element => element.category === 'maintenance');
+	res.json(resultat);
 })
 
 
