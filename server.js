@@ -15,14 +15,9 @@ moment.locale('fr');	//date française
 dotenv.config(); //récupérer les informations du fichier .env
 
 // Connexion à la base de données HEROKU
-// const db = new Client({
-// 	connectionString: process.env.DATABASE_URL,
-// 	ssl: false,
-// });
-
-// Connexion à la base de données local
 const db = new Client({
-	connectionString: 'postgresql://sunlight_admin-univership:uni$$123@postgresql-sunlight.alwaysdata.net/sunlight_univership'
+	connectionString: process.env.DATABASE_URL,
+	ssl: false,
 });
 
 db.connect();
@@ -94,6 +89,7 @@ app.post('/login', (req, res) =>{
 	const user = users.find(u => u.mail === mail && u.password === pass);
 	console.log(user);
 	
+	// si invalide on renvoi un status forbidden
 	if (!user) throw res.sendStatus(403);
 
 	//si c'est valide, je renvoi un token
@@ -275,8 +271,7 @@ app.get('/faq/:id', async (req, res) =>{
 })
 
 
-app.listen(3000, ()=> console.log('Server started! 🎉'));
-// app.listen(process.env.PORT, ()=> console.log('Server started! 🎉'));
+app.listen(process.env.PORT, ()=> console.log('Server started! 🎉'));
 
 
 
