@@ -82,7 +82,7 @@ const users = [
 	}
 ]
 
-app.post('/login', async (req, res) =>{
+app.post('/login', (req, res) =>{
 	const mail = req.body.mail;
 	const pass = req.body.password;
 	console.log(mail);
