@@ -62,19 +62,16 @@ async function run(query) {
 app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
 	const pass = req.body.password;
-	console.log(req.body.mail);
-	console.log(req.body.password);
 
-	let querySolo = {
-		text: "SELECT * FROM users WHERE email=$1",
-		values: [mail]
-	};
 	try {
-		const dbResult = await run(querySolo);
+		const dbResult = await run({
+			text: "SELECT * FROM users WHERE email=$1",
+			values: [mail]
+		});
 		const email = dbResult.rows[0].email;
 		const password = dbResult.rows[0].password;
-		console.log(dbResult.rows[0]);
 
+		// check if credentials are valid
 		if (mail === email && pass === password) {
 			//si c'est valide, je renvoi un token
 			const token = generateAccessToken({ mail: req.body.mail })
@@ -86,10 +83,6 @@ app.post('/login', async (req, res) =>{
 		console.error(error);
 		res.sendStatus(403);// si invalide on renvoi un status forbidden
 	}
-	
-
-
-
 
 })
 
