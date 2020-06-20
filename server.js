@@ -87,7 +87,7 @@ app.post('/login', async (req, res) =>{
 	const pass = req.body.password;
 	//compare mail et pass avec ceux de la bdd
 	const user = users.find(u => u.username === mail && u.password === pass);
-	if (!user) throw res.sendStatus(403);
+	if (!user) res.sendStatus(403);
 
 	//si c'est valide, je renvoi un token
 	const token = generateAccessToken({ mail: req.body.mail })
