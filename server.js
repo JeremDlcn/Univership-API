@@ -68,11 +68,11 @@ app.post('/register', (req, res) =>{
 
 const users = [
 	{
-		username: 'a@a.fr',
+		mail: 'a@a.fr',
 		password: 'pass'
 	},
 	{
-		username: 'admin@univership.com',
+		mail: 'admin@univership.com',
 		password: 'admin_univership%%'
 	}
 ]
@@ -82,28 +82,23 @@ app.post('/login', async (req, res) =>{
 	const pass = req.body.password;
 	console.log(req.body.mail);
 	console.log(req.body.password);
-	
-	
-	//compare mail et pass avec ceux de la bdd
-	const user = users.find(u => u.mail === mail && u.password === pass);
-	console.log(user);
-
 
 	let querySolo = {
 		text: "SELECT * FROM users WHERE email=$1",
 		values: [mail]
 	};
-	const result = await run(querySolo);
-	console.log(result.rows[0]);
+	const dbResult = await run(querySolo);
+	const email = dbResult.rows[0].email;
+	const password = dbResult.rows[0].password;
+	console.log(dbResult.rows[0]);
 
-
-	
-	// si invalide on renvoi un status forbidden
-	if (!user) throw res.sendStatus(403);
-
-	//si c'est valide, je renvoi un token
-	const token = generateAccessToken({ mail: req.body.mail })
-	res.json(token);
+	if (mail === email && pass === password) {
+		//si c'est valide, je renvoi un token
+		const token = generateAccessToken({ mail: req.body.mail })
+		res.json(token);
+	} else {
+		res.sendStatus(403);// si invalide on renvoi un status forbidden
+	}
 })
 
 
