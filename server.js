@@ -77,11 +77,14 @@ app.post('/login', async (req, res) =>{
 			const token = generateAccessToken({ mail: req.body.mail })
 			res.json(token);
 		} else {
-			res.sendStatus(403);// si invalide on renvoi un status forbidden
+			res.json({
+				error: 'wrong password'
+			});
 		}
 	} catch (error) {
-		console.error(error);
-		res.sendStatus(403);// si invalide on renvoi un status forbidden
+		res.json({
+			error: 'wrong mail'
+		});
 	}
 
 })
