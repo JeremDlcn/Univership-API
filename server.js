@@ -77,8 +77,7 @@ const users = [
 	}
 ]
 
-app.post('/login', (req, res) =>{
-	console.log(req.body);
+app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
 	const pass = req.body.password;
 	console.log(req.body.mail);
@@ -88,6 +87,16 @@ app.post('/login', (req, res) =>{
 	//compare mail et pass avec ceux de la bdd
 	const user = users.find(u => u.mail === mail && u.password === pass);
 	console.log(user);
+
+
+	let querySolo = {
+		text: "SELECT * FROM article WHERE email=$1",
+		values: [mail]
+	};
+	const result = await run(querySolo);
+	console.log(result.rows[0]);
+
+
 	
 	// si invalide on renvoi un status forbidden
 	if (!user) throw res.sendStatus(403);
