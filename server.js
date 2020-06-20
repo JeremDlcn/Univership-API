@@ -15,15 +15,15 @@ moment.locale('fr');	//date française
 dotenv.config(); //récupérer les informations du fichier .env
 
 // Connexion à la base de données HEROKU
-const db = new Client({
-	connectionString: process.env.DATABASE_URL,
-	ssl: false,
-});
+// const db = new Client({
+// 	connectionString: process.env.DATABASE_URL,
+// 	ssl: false,
+// });
 
 // Connexion à la base de données local
-// const db = new Client({
-// 	connectionString: 'postgresql://sunlight_admin-univership:uni$$123@postgresql-sunlight.alwaysdata.net/sunlight_univership'
-// });
+const db = new Client({
+	connectionString: 'postgresql://sunlight_admin-univership:uni$$123@postgresql-sunlight.alwaysdata.net/sunlight_univership'
+});
 
 db.connect();
 
@@ -83,6 +83,7 @@ const users = [
 ]
 
 app.post('/login', (req, res) =>{
+	console.log(req.body);
 	const mail = req.body.mail;
 	const pass = req.body.password;
 	console.log(req.body.mail);
@@ -90,7 +91,7 @@ app.post('/login', (req, res) =>{
 	
 	
 	//compare mail et pass avec ceux de la bdd
-	const user = users.find(u => u.username === mail && u.password === pass);
+	const user = users.find(u => u.mail === mail && u.password === pass);
 	console.log(user);
 	
 	if (!user) throw res.sendStatus(403);
@@ -274,8 +275,8 @@ app.get('/faq/:id', async (req, res) =>{
 })
 
 
-
-app.listen(process.env.PORT, ()=> console.log('Server started! 🎉'));
+app.listen(3000, ()=> console.log('Server started! 🎉'));
+// app.listen(process.env.PORT, ()=> console.log('Server started! 🎉'));
 
 
 
