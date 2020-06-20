@@ -40,7 +40,7 @@ function authenticateToken(req, res, next) {
 	if (token == null) return res.sendStatus(401) // if there isn't any token
   
 	//vérifier le token
-	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
 	  console.log(err)
 	  if (err) return res.sendStatus(403) //interdiction si mauvais token
 	  req.user = user
@@ -62,7 +62,7 @@ async function run(query) {
 
 
 // Routes
-app.post('/register', async (req, res) =>{
+app.post('/register', (req, res) =>{
 	const mail = req.body.mail;
 	const pass = req.body.password;
 	//Store mail and password  in database
@@ -85,8 +85,8 @@ const users = [
 app.post('/login', (req, res) =>{
 	const mail = req.body.mail;
 	const pass = req.body.password;
-	console.log(mail);
-	console.log(pass);
+	console.log(req.body.mail);
+	console.log(req.body.password);
 	
 	
 	//compare mail et pass avec ceux de la bdd
