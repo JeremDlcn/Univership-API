@@ -93,7 +93,7 @@ app.post('/login', (req, res) =>{
 	const user = users.find(u => u.username === mail && u.password === pass);
 	console.log(user);
 	
-	if (!user) res.sendStatus(403);
+	if (!user) throw res.sendStatus(403);
 
 	//si c'est valide, je renvoi un token
 	const token = generateAccessToken({ mail: req.body.mail })
