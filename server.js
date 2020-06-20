@@ -85,8 +85,14 @@ const users = [
 app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
 	const pass = req.body.password;
+	console.log(mail);
+	console.log(pass);
+	
+	
 	//compare mail et pass avec ceux de la bdd
 	const user = users.find(u => u.username === mail && u.password === pass);
+	console.log(user);
+	
 	if (!user) res.sendStatus(403);
 
 	//si c'est valide, je renvoi un token
