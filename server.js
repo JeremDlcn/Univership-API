@@ -72,8 +72,8 @@ const users = [
 		password: 'pass'
 	},
 	{
-		username: 'b@a.fr',
-		password: 'pass'
+		username: 'admin@univership.com',
+		password: 'admin_univership%%'
 	}
 ]
 
@@ -90,7 +90,7 @@ app.post('/login', async (req, res) =>{
 
 
 	let querySolo = {
-		text: "SELECT * FROM article WHERE email=$1",
+		text: "SELECT * FROM users WHERE email=$1",
 		values: [mail]
 	};
 	const result = await run(querySolo);
