@@ -1,4 +1,5 @@
-const sq = require('sqlite3').verbose();	//module pour utiliser sqlite
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 const express = require('express');			//module pour faire une API
 const cors = require('cors');	
 const moment = require('moment');
@@ -10,6 +11,8 @@ app.use(cors());
 app.use(express.json());	//on va récupérer les requête en json
 
 moment.locale('fr');	//date française
+
+dotenv.config(); //récupérer les informations du fichier .env
 
 // Connexion à la base de données HEROKU
 const db = new Client({
@@ -24,6 +27,31 @@ const db = new Client({
 
 db.connect();
 
+//Génération de JWT
+function generateAccessToken(mail) {
+	return jwt.sign(mail, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
+}
+
+//authentification
+function authenticateToken(req, res, next) {
+	// take the jwt access token from the request header
+	const authHeader = req.headers['authorization']
+	const token = authHeader && authHeader.split(' ')[1]
+	if (token == null) return res.sendStatus(401) // if there isn't any token
+  
+	//vérifier le token
+	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+	  console.log(err)
+	  if (err) return res.sendStatus(403) //interdiction si mauvais token
+	  req.user = user
+	  next() // pass the execution off to whatever request the client intended
+	})
+}
+
+
+
+
+
 
 
 // fonction permettant de voir tout les articles
@@ -33,13 +61,49 @@ async function run(query) {
 }
 
 
-
- 
-
-
-
-
 // Routes
+app.post('/register', async (req, res) =>{
+	const mail = req.body.mail;
+	const pass = req.body.password;
+	//Store mail and password  in database
+
+	const token = generateAccessToken({ mail: req.body.mail })
+	res.json(token);
+})
+
+const users = [
+	{
+		username: 'a@a.fr',
+		password: 'pass'
+	},
+	{
+		username: 'b@a.fr',
+		password: 'pass'
+	}
+]
+
+app.post('/login', async (req, res) =>{
+	const mail = req.body.mail;
+	const pass = req.body.password;
+	//compare mail et pass avec ceux de la bdd
+	const user = users.find(u => u.username === mail && u.password === pass);
+	if (!user) throw res.sendStatus(403);
+
+	//si c'est valide, je renvoi un token
+	const token = generateAccessToken({ mail: req.body.mail })
+	res.json(token);
+})
+
+
+
+
+app.get('/private', authenticateToken, async (req, res) =>{
+	const queryView = {
+		text: "SELECT * FROM article WHERE visibility = 'private'"
+	}
+	const result = await run(queryView);
+	res.json(result.rows);
+})
 
 
 // Renvoi la liste des articles avec la visibilités public
