@@ -51,7 +51,7 @@ function authenticateToken(req, res, next) {
 
 // fonction permettant de voir tout les articles
 async function run(query) {
-	let result = await db.query(query).catch(error => console.log(error))	
+	let result = await db.query(query);	
 	return result;
 }
 
@@ -69,18 +69,28 @@ app.post('/login', async (req, res) =>{
 		text: "SELECT * FROM users WHERE email=$1",
 		values: [mail]
 	};
-	const dbResult = await run(querySolo).catch(error => console.log(error));
-	const email = dbResult.rows[0].email;
-	const password = dbResult.rows[0].password;
-	console.log(dbResult.rows[0]);
+	try {
+		const dbResult = await run(querySolo);
+		const email = dbResult.rows[0].email;
+		const password = dbResult.rows[0].password;
+		console.log(dbResult.rows[0]);
 
-	if (mail === email && pass === password) {
-		//si c'est valide, je renvoi un token
-		const token = generateAccessToken({ mail: req.body.mail })
-		res.json(token);
-	} else {
+		if (mail === email && pass === password) {
+			//si c'est valide, je renvoi un token
+			const token = generateAccessToken({ mail: req.body.mail })
+			res.json(token);
+		} else {
+			res.sendStatus(403);// si invalide on renvoi un status forbidden
+		}
+	} catch (error) {
+		console.error(error);
 		res.sendStatus(403);// si invalide on renvoi un status forbidden
 	}
+	
+
+
+
+
 })
 
 
