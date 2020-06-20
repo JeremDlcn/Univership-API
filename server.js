@@ -61,25 +61,7 @@ async function run(query) {
 
 
 // Routes
-app.post('/register', (req, res) =>{
-	const mail = req.body.mail;
-	const pass = req.body.password;
-	//Store mail and password  in database
 
-	const token = generateAccessToken({ mail: req.body.mail })
-	res.json(token);
-})
-
-const users = [
-	{
-		mail: 'a@a.fr',
-		password: 'pass'
-	},
-	{
-		mail: 'admin@univership.com',
-		password: 'admin_univership%%'
-	}
-]
 
 app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
@@ -91,7 +73,7 @@ app.post('/login', async (req, res) =>{
 		text: "SELECT * FROM users WHERE email=$1",
 		values: [mail]
 	};
-	const dbResult = await run(querySolo);
+	const dbResult = await run(querySolo).catch(error => console.log(error));
 	const email = dbResult.rows[0].email;
 	const password = dbResult.rows[0].password;
 	console.log(dbResult.rows[0]);
