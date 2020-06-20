@@ -51,8 +51,12 @@ function authenticateToken(req, res, next) {
 
 // fonction permettant de voir tout les articles
 async function run(query) {
-	let result = await db.query(query);
-	return result;
+	try {
+		let result = await db.query(query);	
+		return result;
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 
