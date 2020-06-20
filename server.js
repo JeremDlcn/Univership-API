@@ -46,9 +46,6 @@ function authenticateToken(req, res, next) {
 
 
 
-
-
-
 // fonction permettant de voir tout les articles
 async function run(query) {
 	let result = await db.query(query);	
@@ -56,8 +53,10 @@ async function run(query) {
 }
 
 
-// Routes
 
+
+
+// Routes
 
 app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
@@ -167,7 +166,7 @@ app.get('/public/encours', async (req, res) =>{
 
 
 // Récupérer la liste complète des articles
-app.get('/list', async (req, res) =>{
+app.get('/list', authenticateToken, async (req, res) =>{
 	const queryView = {
 		text: "SELECT * FROM article"
 	}
@@ -190,7 +189,7 @@ app.get('/article/:id', async (req, res) =>{
 
 
 //création d'un article
-app.post('/create', async (req, res)=> {
+app.post('/article/create', authenticateToken, async (req, res)=> {
 	const corps = req.body;
 
 	//Ajout de la date actuel avec le commentaire
@@ -206,7 +205,7 @@ app.post('/create', async (req, res)=> {
 
 
 //Modification d'un article
-app.post('/edit/:id', (req, res)=> {
+app.post('/article/edit/:id', authenticateToken, (req, res)=> {
 	const index = Number(req.params.id);
 	const corps = req.body;
 	let queryUpdate = {
@@ -220,7 +219,7 @@ app.post('/edit/:id', (req, res)=> {
 
 
 //Suppression d'un article
-app.delete('/delete/:id', (req, res)=> {
+app.delete('/article/delete/:id', authenticateToken, (req, res)=> {
 	const index = Number(req.params.id);
 
 	let queryDelete = {
@@ -238,7 +237,7 @@ app.delete('/delete/:id', (req, res)=> {
 // Partie FAQ
 
 //création d'une questions FAQ
-app.post('/faq/create', async (req, res)=> {
+app.post('/faq/create', authenticateToken, async (req, res)=> {
 	const corps = req.body;
 
 	let queryInsert = {
