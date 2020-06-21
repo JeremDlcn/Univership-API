@@ -24,7 +24,7 @@ db.connect();
 
 //Génération de JWT
 function generateAccessToken(mail) {
-	return jwt.sign(mail, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
+	return jwt.sign(mail, process.env.TOKEN_SECRET, { expiresIn: '30s' });
 }
 
 //authentification
