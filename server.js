@@ -78,6 +78,7 @@ app.get('/expired', authenticateToken, async (req, res) =>{
 app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
 	const pass = req.body.password;
+	const name = req.body.mail.match(/([^>]*)@/)[1].replace("@","");
 
 	try {
 		const dbResult = await run({
@@ -91,7 +92,10 @@ app.post('/login', async (req, res) =>{
 		if (mail === email && pass === password) {
 			//si c'est valide, je renvoi un token
 			const token = generateAccessToken({ mail: req.body.mail })
-			res.json(token);
+			res.json({
+				token: token,
+				name: name
+			});
 		} else {
 			res.json({
 				error: 'wrong password'
