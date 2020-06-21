@@ -24,7 +24,7 @@ db.connect();
 
 //Génération de JWT
 function generateAccessToken(mail) {
-	return jwt.sign(mail, process.env.TOKEN_SECRET, { expiresIn: '30s' });
+	return jwt.sign(mail, process.env.TOKEN_SECRET, { expiresIn: '3d' });
 }
 
 //authentification
@@ -55,6 +55,28 @@ function authenticateToken(req, res, next) {
 	})
 }
 
+//is the user is auth
+function authToken(req) {
+	// take the jwt access token from the request header
+	const authHeader = req.headers['authorization']
+	const token = authHeader && authHeader.split(' ')[1]
+	if (token == null) return false
+  
+	//vérifier le token
+	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+
+	  if (err) {
+		if (err.name !== null && err.name === 'TokenExpiredError') {
+			return false
+		} else {
+			return false
+	  	}
+	  }
+	  req.user = user
+	  return true;
+	})
+}
+
 
 
 
@@ -77,8 +99,8 @@ app.get('/expired', authenticateToken, async (req, res) =>{
 
 app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
-	const pass = req.body.password;
-	const name = req.body.mail.match(/([^>]*)@/)[1].replace("@","");
+	const pass = req.body.password.substring(0,25); //less code open
+	const name = req.body.mail.match(/([^>]*)@/)[1].replace("@",""); //get a username
 
 	try {
 		const dbResult = await run({
@@ -203,9 +225,14 @@ app.get('/article/:id', async (req, res) =>{
 		text: "SELECT * FROM article WHERE id=$1",
 		values: [index]
 	};
-	const result = await run(querySolo);
-	res.json(result.rows[0]);
-
+	let result = await run(querySolo);
+	if (result.rows[0].visibility === 'private') {
+		let final = authToken(req) ? result.rows[0] : {	status: 'access denied'	}
+		res.json(final);
+	} 
+	else {
+		res.json(result.rows[0]);
+	}
 })
 
 
