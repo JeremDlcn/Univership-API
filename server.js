@@ -36,9 +36,11 @@ function authenticateToken(req, res, next) {
   
 	//vérifier le token
 	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-	  console.log(err)
-	  console.log(err.name);
+
+	//   console.log(err.name);
+	console.log(err)
 	  if (err) {
+		console.log(err)
 		if (err.name !== null && err.name === 'TokenExpiredError') {
 			return res.json({
 				error: 'token expired'
