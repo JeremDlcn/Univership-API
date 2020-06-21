@@ -45,7 +45,9 @@ function authenticateToken(req, res, next) {
 				status: 'token expired'
 			});
 		} else {
-			return res.sendStatus(403) //interdiction si mauvais token
+			return res.json({
+				status: 'token not found'
+			});
 	  	}
 	  }
 	  req.user = user
