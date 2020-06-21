@@ -64,6 +64,7 @@ function authToken(req) {
   
 	//vérifier le token
 	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+	console.log(err);
 
 	  if (err) {
 		if (err.name !== null && err.name === 'TokenExpiredError') {
@@ -228,6 +229,8 @@ app.get('/article/:id', async (req, res) =>{
 	let result = await run(querySolo);
 	if (result.rows[0].visibility === 'private') {
 		let final = authToken(req) ? result.rows[0] : {	status: 'access denied'	}
+		console.log(authToken(req));
+		
 		res.json(final);
 	} 
 	else {
