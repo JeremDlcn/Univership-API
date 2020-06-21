@@ -226,7 +226,7 @@ app.post('/article/edit/:id', authenticateToken, (req, res)=> {
 	const index = Number(req.params.id);
 	const corps = req.body;
 	let queryUpdate = {
-		text: "UPDATE article SET title = $1, category = $2, content = $3, img = $5, visibility = $6 WHERE id = $7",
+		text: "UPDATE article SET title = $1, category = $2, content = $3, img = $4, visibility = $5 WHERE id = $6",
 		values: [corps.title, corps.category, corps.content, corps.img, corps.visibility, index]
 	}
 	// Mettre à jour la ligne lié à l'article sélectionné avec son id
