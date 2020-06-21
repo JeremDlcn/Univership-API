@@ -39,7 +39,7 @@ function authenticateToken(req, res, next) {
 	  console.log(err)
 	  console.log(err.name);
 	  if (err) {
-		if (err.name && err.name === 'TokenExpiredError') {
+		if (err.name !== null && err.name === 'TokenExpiredError') {
 			return res.json({
 				error: 'token expired'
 			});
