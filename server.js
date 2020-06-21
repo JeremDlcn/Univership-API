@@ -217,7 +217,9 @@ app.post('/article/create', authenticateToken, async (req, res)=> {
 		values: [corps.title, corps.category, corps.content, date, corps.img, corps.visibility]
 	}
 	run(queryInsert);
-	res.send('contenu crée');
+	res.json({
+		status: 'created'
+	});
 });
 
 
@@ -243,8 +245,13 @@ app.delete('/article/delete/:id', authenticateToken, (req, res)=> {
 		text: "DELETE FROM article WHERE id = $1",
 		values: [index]
 	}
-	run(queryDelete)
-	.catch(err=>console.log(err))
+	try {
+		run(queryDelete)
+	} catch (error) {
+		console.log(error);
+	}
+
+
 	res.send('contenu supprimé');
 });
 
