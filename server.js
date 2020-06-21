@@ -37,13 +37,12 @@ function authenticateToken(req, res, next) {
 	//vérifier le token
 	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
 
-	//   console.log(err.name);
 	console.log(err)
 	  if (err) {
 		console.log(err)
 		if (err.name !== null && err.name === 'TokenExpiredError') {
 			return res.json({
-				error: 'token expired'
+				status: 'token expired'
 			});
 		} else {
 			return res.sendStatus(403) //interdiction si mauvais token
@@ -68,6 +67,11 @@ async function run(query) {
 
 
 // Routes
+app.get('/expired', authenticateToken, async (req, res) =>{
+	res.json({
+		status: valid
+	});
+})
 
 app.post('/login', async (req, res) =>{
 	const mail = req.body.mail;
