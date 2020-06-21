@@ -71,7 +71,7 @@ async function run(query) {
 // Routes
 app.get('/expired', authenticateToken, async (req, res) =>{
 	res.json({
-		status: valid
+		status: 'valid'
 	});
 })
 
