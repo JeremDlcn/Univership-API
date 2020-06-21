@@ -56,7 +56,7 @@ function authenticateToken(req, res, next) {
 }
 
 //is the user is auth
-function authToken(req) {
+function authToken(req,res,dataParams) {
 	// take the jwt access token from the request header
 	const authHeader = req.headers['authorization']
 	const token = authHeader && authHeader.split(' ')[1]
@@ -64,18 +64,22 @@ function authToken(req) {
   
 	//vérifier le token
 	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-	console.log(err);
 
 	  if (err) {
 		if (err.name !== null && err.name === 'TokenExpiredError') {
-			return false
+			res.json({	
+				status: 'access denied'
+			})
 		} else {
-			return false
+			res.json({	
+				status: 'access denied'
+			})
 	  	}
+	  } else {
+		res.json(dataParams);
 	  }
-	  req.user = user
-	  return true;
 	})
+
 }
 
 
@@ -228,10 +232,7 @@ app.get('/article/:id', async (req, res) =>{
 	};
 	let result = await run(querySolo);
 	if (result.rows[0].visibility === 'private') {
-		let final = authToken(req) ? result.rows[0] : {	status: 'access denied'	}
-		console.log(authToken(req));
-		
-		res.json(final);
+		authToken(req,res,result.rows[0])
 	} 
 	else {
 		res.json(result.rows[0]);
