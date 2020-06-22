@@ -119,7 +119,6 @@ app.post('/login', async (req, res) =>{
 				text: "SELECT * FROM users WHERE email=$1 AND password=crypt($2, password)",
 				values: [mail,pass]
 			});
-			console.log(dbResult);
 			if (dbResult.rows[0] === undefined) {
 				res.json({
 					error: 'wrong password'
