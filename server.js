@@ -107,11 +107,13 @@ app.post('/login', async (req, res) =>{
 
 	try {
 		const dbResult = await run({
-			text: "SELECT * FROM users WHERE email=$1 AND password=crypt($2, password)",
+			text: "SELECT * FROM users WHERE email=$1 AND password=crypt('$2', password)",
 			values: [mail,pass]
 		});
 		const email = dbResult.rows[0].email;
 		const password = dbResult.rows[0].password;
+
+		console.log(password);
 
 		// check if credentials are valid
 		if (mail === email && pass === password) {
@@ -127,6 +129,7 @@ app.post('/login', async (req, res) =>{
 			});
 		}
 	} catch (error) {
+		console.log(error);
 		res.json({
 			error: 'wrong mail'
 		});
