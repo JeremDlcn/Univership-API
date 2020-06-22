@@ -106,37 +106,36 @@ app.post('/login', async (req, res) =>{
 	const name = req.body.mail.match(/([^>]*)@/)[1].replace("@",""); //get a username
 
 	try {
-		const dbResult = await run({
-			text: "SELECT * FROM users WHERE email=$1 AND password=crypt($2, password)",
-			values: [mail,pass]
+		const chckMail = await run({
+			text: "SELECT * FROM users WHERE email=$1",
+			values: [mail]
 		});
-		console.log(dbResult);
-		if (dbResult.rows[0] === undefined) {
+		if (chckMail.rows[0] === undefined) {
 			res.json({
-				error: 'wrong password'
+				error: 'wrong mail'
 			});
 		} else {
-			const chckMail = await run({
-				text: "SELECT * FROM users WHERE email=$1",
-				values: [mail]
+			const dbResult = await run({
+				text: "SELECT * FROM users WHERE email=$1 AND password=crypt($2, password)",
+				values: [mail,pass]
 			});
-
-			// check if credentials are valid
-			if (mail === chckMail.rows[0].email) {
-				//si c'est valide, je renvoi un token
-				const token = generateAccessToken({ mail: req.body.mail })
+			console.log(dbResult);
+			if (dbResult.rows[0] === undefined) {
 				res.json({
-					token: token,
-					name: name
+					error: 'wrong password'
 				});
 			} else {
-				res.json({
-					error: 'wrong mail'
-				});	
+				// check if credentials are valid
+				if (mail === dbResult.rows[0].email) {
+					//si c'est valide, je renvoi un token
+					const token = generateAccessToken({ mail: req.body.mail })
+					res.json({
+						token: token,
+						name: name
+					});
+				}
 			}
-
 		}
-		
 
 	} catch (error) {
 		console.log(error);
