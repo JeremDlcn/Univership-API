@@ -110,28 +110,36 @@ app.post('/login', async (req, res) =>{
 			text: "SELECT * FROM users WHERE email=$1 AND password=crypt($2, password)",
 			values: [mail,pass]
 		});
-		const email = dbResult.rows[0].email;
 
-		console.log(dbResult.rows[0]);
-
-		// check if credentials are valid
-		if (mail === email) {
-			//si c'est valide, je renvoi un token
-			const token = generateAccessToken({ mail: req.body.mail })
-			res.json({
-				token: token,
-				name: name
-			});
-		} else {
+		if (dbResult.rows[0].email === undefined) {
 			res.json({
 				error: 'wrong password'
 			});
+		} else {
+			const chckMail = await run({
+				text: "SELECT * FROM users WHERE email=$1",
+				values: [mail]
+			});
+
+			// check if credentials are valid
+			if (mail === chckMail.rows[0].email) {
+				//si c'est valide, je renvoi un token
+				const token = generateAccessToken({ mail: req.body.mail })
+				res.json({
+					token: token,
+					name: name
+				});
+			} else {
+				res.json({
+					error: 'wrong mail'
+				});	
+			}
+
 		}
+		
+
 	} catch (error) {
 		console.log(error);
-		res.json({
-			error: 'wrong mail'
-		});
 	}
 
 })
