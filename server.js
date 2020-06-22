@@ -37,9 +37,7 @@ function authenticateToken(req, res, next) {
 	//vérifier le token
 	jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
 
-	console.log(err)
 	  if (err) {
-		console.log(err)
 		if (err.name !== null && err.name === 'TokenExpiredError') {
 			return res.json({
 				status: 'token expired'
@@ -109,8 +107,8 @@ app.post('/login', async (req, res) =>{
 
 	try {
 		const dbResult = await run({
-			text: "SELECT * FROM users WHERE email=$1",
-			values: [mail]
+			text: "SELECT * FROM users WHERE email=$1 AND password=crypt($2, password)",
+			values: [mail,pass]
 		});
 		const email = dbResult.rows[0].email;
 		const password = dbResult.rows[0].password;
