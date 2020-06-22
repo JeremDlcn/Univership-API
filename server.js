@@ -111,12 +111,11 @@ app.post('/login', async (req, res) =>{
 			values: [mail,pass]
 		});
 		const email = dbResult.rows[0].email;
-		const password = dbResult.rows[0].password;
 
-		console.log(password);
+		console.log(dbResult.rows[0]);
 
 		// check if credentials are valid
-		if (mail === email && pass === password) {
+		if (mail === email) {
 			//si c'est valide, je renvoi un token
 			const token = generateAccessToken({ mail: req.body.mail })
 			res.json({
